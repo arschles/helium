@@ -30,7 +30,7 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	srv := runtime.NewServer(port)
 	srvErrCh := make(chan error)
 	go func() {
-		log.Debug("Running the event handler server")
+		log.Debug("Starting the runtime server")
 		srvErrCh <- srv.Run()
 	}()
 	// TODO: ping the server until it's up
