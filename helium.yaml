@@ -1,4 +1,5 @@
 version: 0.0.1
+
 build:
   image-name: quay.io/deis/go-dev
   image-tag: 0.17.0

@@ -4,11 +4,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/arschles/godo/config"
-	"github.com/arschles/godo/log"
 	dockutil "github.com/arschles/godo/util/docker"
 	"github.com/codegangsta/cli"
 	docker "github.com/fsouza/go-dockerclient"
+	"github.com/kubehelium/helium/cli/config"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 // DockerPush is the cli action for 'godo docker-push'

@@ -10,11 +10,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/arschles/godo/config"
-	"github.com/arschles/godo/log"
-	dockutil "github.com/arschles/godo/util/docker"
 	"github.com/codegangsta/cli"
 	docker "github.com/fsouza/go-dockerclient"
+	"github.com/kubehelium/helium/cli/config"
+	dockutil "github.com/kubehelium/helium/cli/util/docker"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 // DockerBuild is the CLI action for 'godo docker-build'

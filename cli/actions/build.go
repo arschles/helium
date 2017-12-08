@@ -5,13 +5,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/arschles/godo/config"
-	"github.com/arschles/godo/log"
-	"github.com/arschles/godo/util/docker"
 	"github.com/codegangsta/cli"
+	"github.com/kubehelium/helium/cli/config"
+	"github.com/kubehelium/helium/cli/util/docker"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
-// Build is the CLI handler for 'godo build'
+// Build is the CLI handler for 'he build'
 func Build(c *cli.Context) {
 	cfg := config.ReadOrDie(c.String(FlagConfigFile))
 	paths := PathsOrDie()

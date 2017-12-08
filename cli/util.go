@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/arschles/godo/log"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 func cmdStr(cmd *exec.Cmd) string {

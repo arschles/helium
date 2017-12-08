@@ -3,7 +3,7 @@ package config
 import (
 	"io/ioutil"
 
-	"github.com/arschles/godo/log"
+	log "github.com/kubehelium/helium/pkg/log/human"
 	"gopkg.in/yaml.v2"
 )
 

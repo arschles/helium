@@ -3,7 +3,7 @@ package actions
 import (
 	"os"
 
-	"github.com/arschles/godo/log"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 type Paths struct {

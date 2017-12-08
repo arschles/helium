@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	fileutil "github.com/arschles/godo/util/file"
+	fileutil "github.com/kubehelium/helium/cli/util/file"
 )
 
 type ErrWritingHeader struct {

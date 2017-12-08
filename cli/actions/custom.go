@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/arschles/godo/config"
-	"github.com/arschles/godo/log"
-	"github.com/arschles/godo/util/docker"
 	"github.com/codegangsta/cli"
+	"github.com/kubehelium/helium/cli/config"
+	"github.com/kubehelium/helium/cli/util/docker"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 const (

@@ -3,8 +3,8 @@ package docker
 import (
 	"os"
 
-	"github.com/arschles/godo/log"
 	docker "github.com/fsouza/go-dockerclient"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 // ClientOrDie creates a new Docker client. If one couldn't be created, logs and error and exits with status code 1

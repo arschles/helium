@@ -3,7 +3,7 @@ package config
 import (
 	"path/filepath"
 
-	"github.com/arschles/godo/util"
+	"github.com/kubehelium/helium/cli/util"
 )
 
 type Docker struct {

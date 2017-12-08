@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/arschles/godo/actions"
-	"github.com/arschles/godo/log"
 	"github.com/codegangsta/cli"
+	"github.com/kubehelium/helium/cli/actions"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 func main() {

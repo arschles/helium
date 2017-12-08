@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/arschles/godo/log"
 	docker "github.com/fsouza/go-dockerclient"
+	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
 // Run runs cmd in the given image using the docker client cl. It mounts cwd into containerMount in the running container and sends on the following channels:
