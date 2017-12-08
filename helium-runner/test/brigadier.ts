@@ -1,7 +1,7 @@
 import "mocha"
-import {assert} from "chai"
+import { assert } from "chai"
 
-import * as brigade from "../src/brigadier"
+import * as brigade from "../src/balloon"
 import * as jobImpl from "../src/job"
 
 import * as mock from "./mock"
@@ -9,35 +9,35 @@ import * as mock from "./mock"
 // These tests are largely designed to ensure that the objects a script is likely
 // to use are indeed exposed. Tests for the actual functionality of each are found
 // in their respective libraries.
-describe("brigadier", function() {
-  it("has #fire", function() {
+describe("brigadier", function () {
+  it("has #fire", function () {
     assert.property(brigade, "fire")
   })
-  it("has .Job", function() {
+  it("has .Job", function () {
     assert.property(brigade, "Job")
   })
-  it("has .Group", function() {
+  it("has .Group", function () {
     assert.property(brigade, "Group")
   })
-  it("has .events", function() {
+  it("has .events", function () {
     assert.property(brigade, "events")
   })
 
   // Events tests
-  describe("events", function() {
-    it("has #on", function() {
+  describe("events", function () {
+    it("has #on", function () {
       assert.property(brigade.events, "on")
     })
   })
 
   // Group tests
-  describe("Group", function() {
+  describe("Group", function () {
     let g: brigade.Group
-    beforeEach(function() {
+    beforeEach(function () {
       g = new brigade.Group()
     })
-    describe("#add", function() {
-      it("adds a job", function() {
+    describe("#add", function () {
+      it("adds a job", function () {
         assert.equal(g.length(), 0)
         let j = new mock.MockJob("hello")
         let j2 = new mock.MockJob("goodbye")
@@ -46,8 +46,8 @@ describe("brigadier", function() {
         assert.equal(g.length(), 2)
       })
     })
-    describe("#runEach", function() {
-      it("runs each job in order", function(done) {
+    describe("#runEach", function () {
+      it("runs each job in order", function (done) {
         let j1 = new mock.MockJob("first")
         let j2 = new mock.MockJob("second")
         let j3 = new mock.MockJob("third")
@@ -62,8 +62,8 @@ describe("brigadier", function() {
           done()
         })
       })
-      context("when job fails", function() {
-        it("stops processing with an error", function(done) {
+      context("when job fails", function () {
+        it("stops processing with an error", function (done) {
           let j1 = new mock.MockJob("first")
           let j2 = new mock.MockJob("second")
           j2.fail = true
@@ -78,8 +78,8 @@ describe("brigadier", function() {
         })
       })
     })
-    describe("#runAll", function() {
-      it("runs jobs asynchronously", function(done) {
+    describe("#runAll", function () {
+      it("runs jobs asynchronously", function (done) {
         let j1 = new mock.MockJob("first")
         let j2 = new mock.MockJob("second")
         let j3 = new mock.MockJob("third")
@@ -89,8 +89,8 @@ describe("brigadier", function() {
           done()
         })
       })
-      context("when job fails", function() {
-        it("stops processing with an error", function(done) {
+      context("when job fails", function () {
+        it("stops processing with an error", function (done) {
           let j1 = new mock.MockJob("first")
           let j2 = new mock.MockJob("second")
           j2.fail = true

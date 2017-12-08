@@ -5,7 +5,7 @@ import * as ulid from "ulid"
 
 import * as events from "./events"
 import * as process from "process"
-import * as brigadier from './brigadier'
+import * as brigadier from './balloon'
 
 interface BuildStorage {
   create(e: events.BrigadeEvent, project: events.Project, size?: string): Promise<string>

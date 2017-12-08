@@ -3,7 +3,7 @@ import { assert } from "chai"
 import * as events from "../src/events"
 import * as app from "../src/app"
 import * as mock from "./mock"
-import * as brigadier from "../src/brigadier"
+import * as brigadier from "../src/balloon"
 
 let loader = (id: string, ns: string): Promise<events.Project> => {
   let proj = mock.mockProject()

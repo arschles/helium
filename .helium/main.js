@@ -1,7 +1,5 @@
 // TODO: allow for multiple files
-const { events, Job, Group } = require("brigadier")
-
-const { installGoDeps, buildCLIJob, testGo } = require("go");
+const { events, Job, Group } = require("./balloon")
 
 events.on("build", (evt, project) => {
     var installDepsJob = installGoDeps();
@@ -37,3 +35,5 @@ function buildCLI() {
 function testGo() {
     return goJob("test-go", ["go test ./..."]);
 }
+
+console.log("hello!");

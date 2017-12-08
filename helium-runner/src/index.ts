@@ -28,7 +28,7 @@ import * as process from "process"
 import * as ulid from "ulid"
 
 import * as events from "./events"
-import * as brigadier from './brigadier'
+import * as brigadier from './balloon'
 import { App } from "./app"
 
 // helium is the result of compiling all of the helium scripts together. it only 
