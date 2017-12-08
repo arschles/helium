@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kubehelium/helium/cli/actions"
+	"github.com/kubehelium/helium/helium-cli/actions"
 	log "github.com/kubehelium/helium/pkg/log/human"
 	"github.com/spf13/cobra"
 )
