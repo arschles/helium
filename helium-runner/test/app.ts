@@ -18,8 +18,6 @@ describe("app", function () {
     let projectNS: string = "app-test-ns"
     beforeEach(function () {
       a = new app.App(projectID, projectNS)
-      a.loadProject = loader
-      a.buildStorage = new mock.MockBuildStorage()
       // Disable this so we can run tests without panics.
       a.exitOnError = false
     })

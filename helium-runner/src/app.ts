@@ -36,19 +36,6 @@ export class App {
   // true if the "after" event has fired.
   protected afterHasFired: boolean = false
   protected storageIsDestroyed: boolean = false
-  /**
-   * loadProject is a function that loads projects.
-   * 
-   * TODO
-   */
-  public loadProject = project.loadEmpty;
-  /**
-   * buildStorage controls the per-build storage layer.
-   * 
-   * TODO
-   */
-  public buildStorage: BuildStorage = null;
-
 
   /**
    * Create a new App.
@@ -64,25 +51,6 @@ export class App {
    */
   public run(e: events.BrigadeEvent): Promise<boolean> {
     this.lastEvent = e
-
-    // This closure destroys storage for us. It is called by event handlers.
-    let destroyStorage = () => {
-      // Since we catch a destroy error, the outer wrapper will
-      // not get that error. Essentially, we swallow the error to prevent
-      // cleanup from exiting > 0.
-      return this.buildStorage.destroy().then(destroyed => {
-        if (!destroyed) {
-          console.log(`storage not destroyed for ${e.workerID}`)
-        }
-      }).catch(reason => {
-        var msg = reason
-        // Kubernetes objects put error messages here:
-        if (reason.body && reason.body.message) {
-          msg = reason.body.message
-        }
-        console.log(`failed to destroy storage for ${e.workerID}: ${msg}`)
-      })
-    }
 
     // We need at least one error trap to avoid losing the error to a new
     // throw from EventEmitter.
@@ -116,12 +84,6 @@ export class App {
     // Run at the end.
     process.on("beforeExit", (code) => {
       if (this.afterHasFired) {
-        // So at this point, the after event has fired and we can cleanup.
-        if (!this.storageIsDestroyed) {
-          console.log("beforeExit(2): destroying storage")
-          this.storageIsDestroyed = true
-          destroyStorage()
-        }
         return
       }
 
@@ -150,14 +112,10 @@ export class App {
 
     // Now that we have all the handlers registered, load the project and
     // execute the event.
-    return this.loadProject(this.projectID, this.projectNS).then(p => {
-      this.proj = p
-      // Setup storage
-      return this.buildStorage.create(e, p, "50Mi")
-    }).then(() => {
+    return new Promise((resolve, reject) => {
       brigadier.fire(e, this.proj)
-      return true
-    }) // We want to trigger the main rejection handler, so we do not catch().
+      resolve(true);
+    });
   }
 
   /**
