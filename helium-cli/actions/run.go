@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
-	// "path/filepath"
 
 	"github.com/spf13/cobra"
 	// "github.com/kubehelium/helium/cli/util/docker"
@@ -14,7 +14,8 @@ import (
 )
 
 type runner struct {
-	port int
+	port  int
+	heDir string
 }
 
 func (r *runner) run(c *cobra.Command, args []string) error {
@@ -53,14 +54,14 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("error getting current working dir")
 	}
-	heliumDir := fmt.Sprintf("%s/.helium", wd)
-	log.Info("using script dir %s", heliumDir)
+	absHeDir := filepath.Join(wd, r.heDir)
+	log.Debug("Using He build directory %s", r.heDir)
 	cmd := exec.Command(
 		"docker",
 		"run",
 		"--rm",
 		"-v",
-		fmt.Sprintf("%s:/helium", heliumDir),
+		fmt.Sprintf("%s:/helium", absHeDir),
 		"--net",
 		"host",
 		"-e",
@@ -133,6 +134,13 @@ func Run() *cobra.Command {
 		"p",
 		8080,
 		"The port on which to start the Helium runtime server",
+	)
+	flags.StringVarP(
+		&runner.heDir,
+		"build-dir",
+		"b",
+		".helium",
+		"The directory that contains the Helium build script",
 	)
 	return cmd
 
