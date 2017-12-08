@@ -1,0 +1,53 @@
+version: 0.0.1
+build:
+  image-name: quay.io/deis/go-dev
+  image-tag: 0.17.0
+  gopath: "/go"
+  output-binary: godo-test
+  env:
+    - GOOS=darwin
+    - GOARCH=amd64
+docker:
+  image-name: quay.io/arschles/godo
+  tag: 0.0.1
+  build:
+    context:
+      dir: .
+      skip:
+        - vendor
+  push:
+    auth-file-location: ~/.docker/config.json
+custom:
+  - name: hello-world
+    description: print "hello world" in an ubuntu container
+    image-name: ubuntu
+    image-tag: "14.04"
+    command: "echo 'hello world'"
+    mount-target: /pwd
+    env: []
+  - name: ls
+    image-name: ubuntu
+    image-tag: "14.04"
+    command: "ls -la"
+    mount-target: "/pwd"
+    env: []
+  - name: bootstrap
+    description: bootstrap all dependencies for this project
+    image-name: quay.io/deis/go-dev
+    image-tag: "0.13.0"
+    command: "glide install"
+    mount-target: /go/src/github.com/arschles/godo
+    env: ["GOPATH=/go"]
+  - name: cross-compile
+    description: cross compile Godo using gox
+    image-name: quay.io/deis/go-dev
+    image-tag: "0.13.0"
+    command: gox .
+    mount-target: /go/src/github.com/arschles/godo
+    env: ["GOPATH=/go"]
+  - name: test
+    description: test
+    image-name: quay.io/deis/go-dev
+    image-tag: 0.17.0
+    command: go test ./util/... ./tpl/... ./log/... ./config/... ./actions/... .
+    mount-target: /go/src/github.com/arschles/godo
