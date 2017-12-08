@@ -2,21 +2,19 @@
 const { events, Job, Group } = require("./balloon")
 
 events.on("build", (evt, project) => {
+    console.log("this is the build event!")
     var installDepsJob = installGoDeps();
     var buildCLIJob = buildCLI();
     var testAllGoJob = testGo();
-    return Group.runAll([installDepsJob, buldCLIJob, testAllGoJob]);
+    return Group.runAll([installDepsJob, buildCLIJob, testAllGoJob]);
 });
 
 const path = "/go/src/github.com/kubehelium/helium"
 function goJob(name, tasks) {
     var j = new Job(name, "quay.io/deis/go-dev:v1.6.0")
-    j.tasks = [
-        "mkdir -p " + path,
-        "cd " + path
-    ];
+    j.tasks = ["mkdir -p " + path, "cd " + path];
     for (var i = 0; i < tasks.length; i++) {
-        j.tasks.append(tasks[i]);
+        j.tasks.push(tasks[i]);
     }
     return j
 }
@@ -35,5 +33,3 @@ function buildCLI() {
 function testGo() {
     return goJob("test-go", ["go test ./..."]);
 }
-
-console.log("hello!");

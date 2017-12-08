@@ -14,10 +14,8 @@ let loader = (id: string, ns: string): Promise<events.Project> => {
 describe("app", function () {
   describe("App", function () {
     let a: app.App
-    let projectID: string = "app-test-id"
-    let projectNS: string = "app-test-ns"
     beforeEach(function () {
-      a = new app.App(projectID, projectNS)
+      a = new app.App()
       // Disable this so we can run tests without panics.
       a.exitOnError = false
     })

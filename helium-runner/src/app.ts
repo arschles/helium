@@ -17,6 +17,7 @@ import { loadEmptyProject } from './project';
  * and errors occur.
  */
 export class App {
+  constructor() { }
   /**
    * exitOnError controls whether the app will exit when an uncaught exception or unhandled rejection occurs.
    *
@@ -26,9 +27,7 @@ export class App {
    */
   public exitOnError: boolean = true
   protected errorsHandled: boolean = false
-  protected lastEvent: events.BrigadeEvent
-  protected projectID: string
-  protected projectNS: string
+  protected lastEvent: events.Event
   // On project loading error, this value may be passed. In all other cases,
   // it is overwritten by an actual project.
   protected proj: events.Project = new events.Project()
@@ -38,18 +37,9 @@ export class App {
   protected storageIsDestroyed: boolean = false
 
   /**
-   * Create a new App.
-   *
-   * An app requires a project ID and project NS.
-   */
-  constructor(projectID: string, projectNS: string) {
-    this.projectID = projectID
-    this.projectNS = projectNS
-  }
-  /**
    * run runs a particular event for this app.
    */
-  public run(e: events.BrigadeEvent): Promise<boolean> {
+  public run(e: events.Event): Promise<boolean> {
     this.lastEvent = e
 
     // We need at least one error trap to avoid losing the error to a new
@@ -87,12 +77,12 @@ export class App {
         return
       }
 
-      let after: events.BrigadeEvent = {
-        buildID: e.buildID,
+      let after: events.Event = {
+        id: e.id,
         workerID: e.workerID,
         type: "after",
-        provider: "brigade",
-        commit: e.commit,
+        provider: "helium",
+        metadata: e.metadata,
         cause: {
           event: e,
           trigger: code == 0 ? "success" : "failure"
@@ -130,12 +120,12 @@ export class App {
     }
     this.errorsHandled = true
 
-    let errorEvent: events.BrigadeEvent = {
-      buildID: this.lastEvent.buildID,
+    let errorEvent: events.Event = {
+      id: this.lastEvent.id,
       workerID: this.lastEvent.workerID,
       type: "error",
-      provider: "brigade",
-      commit: this.lastEvent.commit,
+      provider: "helium",
+      metadata: this.lastEvent.metadata,
       cause: {
         event: this.lastEvent,
         reason: reason,

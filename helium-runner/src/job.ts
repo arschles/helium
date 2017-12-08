@@ -7,7 +7,7 @@
 
 /** */
 
-import {BrigadeEvent, Project} from "./events"
+import { Event, Project } from "./events"
 
 /**
  * The default shell for the job.
@@ -123,11 +123,11 @@ export class JobDockerMount {
   public enabled: boolean = false
 }
 
- /**
-  * Job represents a single job, which is composed of several closely related sequential tasks.
-  * Jobs must have names. Every job also has an associated image, which references
-  * the Docker container to be run.
-  * */
+/**
+ * Job represents a single job, which is composed of several closely related sequential tasks.
+ * Jobs must have names. Every job also has an associated image, which references
+ * the Docker container to be run.
+ * */
 export abstract class Job {
   /** name of the job*/
   public name: string
@@ -136,7 +136,7 @@ export abstract class Job {
   /** tasks is a list of tasks run inside of the shell*/
   public tasks: string[]
   /** env is the environment variables for the job*/
-  public env: {[key: string]:string}
+  public env: { [key: string]: string }
   /** image is the container image to be run*/
   public image: string = brigadeImage
   /** imageForcePull defines the container image pull policy: Always if true or IfNotPresent if false */

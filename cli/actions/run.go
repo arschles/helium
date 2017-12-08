@@ -25,8 +25,10 @@ func Run() *cobra.Command {
 			event := args[0]
 			// event := c.String("target")
 			// dockerClient := docker.ClientOrDie()
+			// TODO: make configurable
+			const port = 8080
 			log.Info("build")
-			srv := runtime.NewServer(8080)
+			srv := runtime.NewServer(port)
 			srvErrCh := make(chan error)
 			go func() {
 				log.Debug("Running the event handler server")
@@ -64,7 +66,14 @@ func Run() *cobra.Command {
 				"-e",
 				"HELIUM_TARGET_DIR=/home/src/dist/src",
 				"-e",
-				fmt.Sprintf("HELIUM_EVENT=%s", event),
+				fmt.Sprintf("HELIUM_EVENT_TYPE=%s", event),
+				"-e",
+				"HELIUM_EVENT_PROVIDER=cli",
+				"-e",
+				fmt.Sprintf("HELIUM_URL=%d", port),
+				"-p",
+				fmt.Sprintf("127.0.0.1:%d:%d", port, port),
+				// TODO: HELIUM_EVENT_METADATA?
 				imgStr,
 			)
 			cmd.Stdout = os.Stdout

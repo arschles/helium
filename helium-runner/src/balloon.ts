@@ -9,6 +9,8 @@
 import * as jobImpl from "./job"
 import * as groupImpl from "./group"
 import * as eventsImpl from "./events"
+import axios from 'axios'
+import { getURL } from './url'
 
 // These are filled by the 'fire' event handler.
 let currentEvent = null
@@ -30,7 +32,7 @@ export let events = new eventsImpl.EventRegistry()
  * Project (the owner project). If an event handler is found, it is executed.
  * If no event handler is found, nothing happens.
  */
-export function fire(e: eventsImpl.BrigadeEvent, p: eventsImpl.Project) {
+export function fire(e: eventsImpl.Event, p: eventsImpl.Project) {
   currentEvent = e
   currentProject = p
   events.fire(e, p)
@@ -49,15 +51,11 @@ export function fire(e: eventsImpl.BrigadeEvent, p: eventsImpl.Project) {
  */
 export class Job extends jobImpl.Job {
   run(): Promise<jobImpl.Result> {
-    // TODO
-    return null;
-    // let jr = new JobRunner(this, currentEvent, currentProject)
-    // this._podName = jr.name
-    // return jr.run().catch(err => {
-    //   // Wrap the message to give clear context.
-    //   let msg = `job ${ this.name }(${ jr.name }): ${ err }`
-    //   return Promise.reject(msg)
-    // })
+    return axios.post(getURL(), {
+      name: this.name,
+      image: this.image,
+      tasks: this.tasks
+    });
   }
 }
 
@@ -79,7 +77,7 @@ export class ErrorReport {
   /**
    * cause is the BrigadeEvent that caused the error.
    */
-  public cause: eventsImpl.BrigadeEvent
+  public cause: eventsImpl.Event
   /**
    * reason is the message that the error reporter received that describes the error.
    *

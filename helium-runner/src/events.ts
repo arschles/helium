@@ -9,10 +9,7 @@
 import { EventEmitter } from "events"
 
 /**
- * BrigadeEvent describes an event.
- *
- * Brigade is an event-based system. The BrigadeEvent object describes such an
- * event.
+ * Event describes an event to be run against a Helium script file
  *
  * Every event has a `type` and a `provider`, where the type indicates what
  * sort of event it is (e.g. `push`) and the provider indicates what system
@@ -33,32 +30,30 @@ import { EventEmitter } from "events"
  * Note that the payload is considered "opaque": It is up to the script to parse
  * it.
  */
-export class BrigadeEvent {
+export class Event {
   /**
-   * buildID is the unique ID for this build.
+   * id is the unique ID for this event.
    */
-  buildID: string;
+  id: string;
   /**
    * workerID is the ID of the worker responsible for handling this event.
    */
   workerID: string;
   /**
-   * type is the event type ("push", "pull_request")
+   * type is the event type ("build", "push", "pull_request")
    */
   type: string;
   /**
-   * provider is the thing that triggered the event ("github", "vsts")
+   * provider is the thing that triggered the event ("github", "cli", etc...)
    */
   provider: string;
   /**
-   * commit is the upstream VCS commit ID (revision).
-   *
-   * If it is not provided, it may be interpreted as `master`, or the head
-   * of the main branch.
-   *
-   * The default value is not guaranteed to be `master` in future versions.
+   * metadata is a JSON map with helium-generated metadata about the event.
+   * 
+   * For example, if the event was triggered by the CLI, "cli" will be set to true
+   * in the map. 
    */
-  commit?: string;
+  metadata: string
   /**
    * payload is the event body.
    * This is the original source from upstream. If upstream returned a string,
@@ -80,7 +75,7 @@ export class Cause {
   /**
    * The event that was the cause.
    */
-  event: BrigadeEvent
+  event: Event
   /**
    * The reason this event has caused a condition. (Typically, an error object)
    */
@@ -154,7 +149,7 @@ export class Project {
  *
  * An event handler will always receive an event and a project.
  */
-type EventHandler = (e: BrigadeEvent, proj?: Project) => void
+type EventHandler = (e: Event, proj?: Project) => void
 
 /**
  * EventRegistry manages the registration and execution of events.
@@ -166,7 +161,7 @@ export class EventRegistry extends EventEmitter {
    */
   constructor() {
     super()
-    this.on("ping", (e: BrigadeEvent, p: Project) => { console.log("ping") })
+    this.on("ping", (e: Event, p: Project) => { console.log("ping") })
   }
 
   public has(name: string) {
@@ -177,7 +172,7 @@ export class EventRegistry extends EventEmitter {
    * fire triggers an event.
    * This uses BrigadeEvent.name to fire an event.
    */
-  public fire(e: BrigadeEvent, proj: Project) {
+  public fire(e: Event, proj: Project) {
     this.emit(e.type, e, proj)
   }
 }

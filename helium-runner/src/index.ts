@@ -27,7 +27,7 @@ import * as process from "process"
 
 import * as ulid from "ulid"
 
-import * as events from "./events"
+import { Event } from "./events"
 import * as brigadier from './balloon'
 import { App } from "./app"
 
@@ -40,16 +40,13 @@ import "./main"
 const pkg = require('../../package.json')
 console.log(`helium - runner version: ${pkg.version} `)
 
-let projectID: string = process.env.BRIGADE_PROJECT_ID
-let projectNamespace: string = process.env.BRIGADE_PROJECT_NAMESPACE
-let commit = process.env.BRIGADE_COMMIT || "master"
 let defaultULID = ulid()
-let e: events.BrigadeEvent = {
-  buildID: process.env.BRIGADE_BUILD || defaultULID,
-  workerID: process.env.BRIGADE_BUILD_NAME || `unknown - ${defaultULID} `,
-  type: process.env.BRIGADE_EVENT_TYPE || "ping",
-  provider: process.env.BRIGADE_EVENT_PROVIDER || "unknown",
-  commit: commit
+let e: Event = {
+  id: process.env.HELIUM_BUILD_ID || defaultULID,
+  workerID: process.env.HELIUM_BUILD_NAME || `unknown - ${defaultULID} `,
+  type: process.env.HELIUM_EVENT_TYPE || "ping",
+  provider: process.env.HELIUM_EVENT_PROVIDER || "unknown",
+  metadata: process.env.HELIUM_EVENT_METADATA || ""
 }
 
 try {
@@ -59,4 +56,4 @@ try {
 }
 
 // Run the app.
-(new App(projectID, projectNamespace)).run(e)
+(new App()).run(e)

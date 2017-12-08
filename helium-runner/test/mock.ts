@@ -1,4 +1,4 @@
-import { Project, BrigadeEvent } from "../src/events"
+import { Project, Event } from "../src/events"
 import { Result, Job } from "../src/job"
 
 
@@ -21,13 +21,13 @@ export function mockProject(): Project {
 
 export function mockEvent() {
   return {
-    buildID: "1234567890abcdef",
+    id: "1234567890abcdef",
     workerID: "test-1234567890abcdef-12345678",
     type: "push",
     provider: "github",
-    commit: "c0ffee",
+    metadata: "",
     payload: "{}"
-  } as BrigadeEvent
+  } as Event
 }
 
 export class MockResult implements Result {
@@ -64,7 +64,7 @@ export class MockJob extends Job {
 }
 
 export class MockBuildStorage {
-  public create(e: BrigadeEvent, project: Project, size?: string): Promise<string> {
+  public create(e: Event, project: Project, size?: string): Promise<string> {
     return Promise.resolve(e.workerID)
   }
   public destroy(): Promise<boolean> {
