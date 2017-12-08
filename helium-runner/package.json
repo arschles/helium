@@ -1,11 +1,11 @@
 {
     "name": "helium-runner",
     "version": "0.1.0",
-    "description": "The runner for Helium builds",
+    "description": "The Javascript runner for Helium builds",
     "main": "dist/index",
     "types": "dist/index",
     "scripts": {
-        "prestart": "node prestart.js",
+        "initialize": "./prepare.sh",
         "start": "node --no-deprecation ./dist/src/index.js",
         "test": "tsc && mocha ./dist/test",
         "build": "tsc",
@@ -16,7 +16,6 @@
     "license": "Apache-2.0",
     "repository": "https://github.com/kubehelium/helium",
     "devDependencies": {
-        "@kubernetes/typescript-node": "^0.1.1",
         "@types/chai": "^4.0.1",
         "@types/mocha": "^2.2.41",
         "@types/node": "^8.0.14",
@@ -26,6 +25,8 @@
         "typescript": "^2.4.2"
     },
     "dependencies": {
+        "concat": "^1.0.3",
+        "copy": "^0.3.1",
         "ulid": "^0.2.0"
     }
 }

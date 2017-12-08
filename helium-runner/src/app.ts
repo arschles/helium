@@ -5,11 +5,10 @@ import * as ulid from "ulid"
 
 import * as events from "./events"
 import * as process from "process"
-import * as k8s from "./k8s"
 import * as brigadier from './brigadier'
 
 interface BuildStorage {
-  create(e:events.BrigadeEvent, project: events.Project, size?: string): Promise<string>
+  create(e: events.BrigadeEvent, project: events.Project, size?: string): Promise<string>
   destroy(): Promise<boolean>
 }
 
@@ -49,12 +48,16 @@ export class App {
   protected storageIsDestroyed: boolean = false
   /**
    * loadProject is a function that loads projects.
+   * 
+   * TODO
    */
-  public loadProject: ProjectLoader = k8s.loadProject
+  public loadProject: ProjectLoader = null;
   /**
    * buildStorage controls the per-build storage layer.
+   * 
+   * TODO
    */
-  public buildStorage: BuildStorage = new k8s.BuildStorage()
+  public buildStorage: BuildStorage = null;
 
 
   /**
@@ -77,9 +80,9 @@ export class App {
       // Since we catch a destroy error, the outer wrapper will
       // not get that error. Essentially, we swallow the error to prevent
       // cleanup from exiting > 0.
-      return this.buildStorage.destroy().then( destroyed => {
+      return this.buildStorage.destroy().then(destroyed => {
         if (!destroyed) {
-          console.log(`storage not destroyed for ${ e.workerID }`)
+          console.log(`storage not destroyed for ${e.workerID}`)
         }
       }).catch(reason => {
         var msg = reason
@@ -87,7 +90,7 @@ export class App {
         if (reason.body && reason.body.message) {
           msg = reason.body.message
         }
-        console.log(`failed to destroy storage for ${ e.workerID }: ${ msg }`)
+        console.log(`failed to destroy storage for ${e.workerID}: ${msg}`)
       })
     }
 
@@ -116,7 +119,7 @@ export class App {
       if (reason.body && reason.body.message) {
         msg = reason.body.message
       }
-      console.log(`FATAL: ${ msg } (rejection)`)
+      console.log(`FATAL: ${msg} (rejection)`)
       this.fireError(reason, "unhandledRejection")
     })
 
@@ -157,11 +160,11 @@ export class App {
 
     // Now that we have all the handlers registered, load the project and
     // execute the event.
-    return this.loadProject(this.projectID, this.projectNS).then (p => {
+    return this.loadProject(this.projectID, this.projectNS).then(p => {
       this.proj = p
       // Setup storage
       return this.buildStorage.create(e, p, "50Mi")
-    }).then( () => {
+    }).then(() => {
       brigadier.fire(e, this.proj)
       return true
     }) // We want to trigger the main rejection handler, so we do not catch().

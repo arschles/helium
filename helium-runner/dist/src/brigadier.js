@@ -1,19 +1,17 @@
+"use strict";
 /**
  * brigadier is the client-facing library for Brigade.
  *
  * Objects in this library are available to `brigade.js` scripts.
  */
-
+Object.defineProperty(exports, "__esModule", { value: true });
 /** */
-
-import * as jobImpl from "./job"
-import * as groupImpl from "./group"
-import * as eventsImpl from "./events"
-
+const jobImpl = require("./job");
+const groupImpl = require("./group");
+const eventsImpl = require("./events");
 // These are filled by the 'fire' event handler.
-let currentEvent = null
-let currentProject = null
-
+let currentEvent = null;
+let currentProject = null;
 /**
  * events is the main event registry.
  *
@@ -21,8 +19,7 @@ let currentProject = null
  * where the `name` is the event name, and the callback is the function to be
  * executed when the event is triggered.
  */
-export let events = new eventsImpl.EventRegistry()
-
+exports.events = new eventsImpl.EventRegistry();
 /**
  * fire triggers an event.
  *
@@ -30,12 +27,12 @@ export let events = new eventsImpl.EventRegistry()
  * Project (the owner project). If an event handler is found, it is executed.
  * If no event handler is found, nothing happens.
  */
-export function fire(e: eventsImpl.BrigadeEvent, p: eventsImpl.Project) {
-  currentEvent = e
-  currentProject = p
-  events.fire(e, p)
+function fire(e, p) {
+    currentEvent = e;
+    currentProject = p;
+    exports.events.fire(e, p);
 }
-
+exports.fire = fire;
 /**
  * Job describes a particular job.
  *
@@ -47,20 +44,20 @@ export function fire(e: eventsImpl.BrigadeEvent, p: eventsImpl.Project) {
  * (in order) inside of the image. When no tasks are supplied, the image is
  * executed as-is.
  */
-export class Job extends jobImpl.Job {
-  run(): Promise<jobImpl.Result> {
-    // TODO
-    return null;
-    // let jr = new JobRunner(this, currentEvent, currentProject)
-    // this._podName = jr.name
-    // return jr.run().catch(err => {
-    //   // Wrap the message to give clear context.
-    //   let msg = `job ${ this.name }(${ jr.name }): ${ err }`
-    //   return Promise.reject(msg)
-    // })
-  }
+class Job extends jobImpl.Job {
+    run() {
+        // TODO
+        return null;
+        // let jr = new JobRunner(this, currentEvent, currentProject)
+        // this._podName = jr.name
+        // return jr.run().catch(err => {
+        //   // Wrap the message to give clear context.
+        //   let msg = `job ${ this.name }(${ jr.name }): ${ err }`
+        //   return Promise.reject(msg)
+        // })
+    }
 }
-
+exports.Job = Job;
 /**
  * Group describes a collection of associated jobs.
  *
@@ -68,23 +65,12 @@ export class Job extends jobImpl.Job {
  *   - In parallel as runAll()
  *   - In serial as runEach()
  */
-export class Group extends groupImpl.Group {
-  // This seems to be how you expose an existing class as an export.
+class Group extends groupImpl.Group {
 }
-
+exports.Group = Group;
 /**
  * ErrorReport describes an error in the runtime handling of a Brigade script.
  */
-export class ErrorReport {
-  /**
-   * cause is the BrigadeEvent that caused the error.
-   */
-  public cause: eventsImpl.BrigadeEvent
-  /**
-   * reason is the message that the error reporter received that describes the error.
-   *
-   * It may be empty if no error description was provided.
-   */
-  public reason?: any
-
+class ErrorReport {
 }
+exports.ErrorReport = ErrorReport;

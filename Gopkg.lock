@@ -27,7 +27,7 @@
 
 [[projects]]
   name = "github.com/arschles/godo"
-  packages = ["actions","config","log","util","util/docker","util/file"]
+  packages = ["log","util/docker"]
   revision = "aed5770c5f7d91c82fca894a5f102cc4cc075aa1"
   version = "v0.3.0"
 
@@ -67,10 +67,22 @@
   version = "1.1"
 
 [[projects]]
+  name = "github.com/gobuffalo/envy"
+  packages = ["."]
+  revision = "e613c80275b86293880eddeb27417c9a7c670ff3"
+  version = "v1.3.0"
+
+[[projects]]
   name = "github.com/gogo/protobuf"
   packages = ["proto"]
   revision = "342cbe0a04158f6dcb03ca0079991a51a4248c02"
   version = "v0.5"
+
+[[projects]]
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/labstack/gommon"
@@ -89,6 +101,12 @@
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
   version = "v0.0.3"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/mitchellh/go-homedir"
+  packages = ["."]
+  revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
 
 [[projects]]
   name = "github.com/opencontainers/go-digest"
@@ -153,6 +171,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "99404e90644aafb32ce34e8abbcb322e740ef548c39c06243277a83a021f5fcd"
+  inputs-digest = "a50382918762114efc57af0ee4457e7ee54b8eacdfd8a5f6ae9af0f165879dc7"
   solver-name = "gps-cdcl"
   solver-version = 1

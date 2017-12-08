@@ -6,7 +6,7 @@
  * appropriate handler is kicked off.
  */
 
-import {EventEmitter} from "events"
+import { EventEmitter } from "events"
 
 /**
  * BrigadeEvent describes an event.
@@ -34,40 +34,40 @@ import {EventEmitter} from "events"
  * it.
  */
 export class BrigadeEvent {
-    /**
-     * buildID is the unique ID for this build.
-     */
-    buildID: string;
-    /**
-     * workerID is the ID of the worker responsible for handling this event.
-     */
-    workerID: string;
-    /**
-     * type is the event type ("push", "pull_request")
-     */
-    type: string;
-    /**
-     * provider is the thing that triggered the event ("github", "vsts")
-     */
-    provider: string;
-    /**
-     * commit is the upstream VCS commit ID (revision).
-     *
-     * If it is not provided, it may be interpreted as `master`, or the head
-     * of the main branch.
-     *
-     * The default value is not guaranteed to be `master` in future versions.
-     */
-    commit?: string;
-    /**
-     * payload is the event body.
-     * This is the original source from upstream. If upstream returned a string,
-     * it is _not_ parsed. For example,
-     * if the upstream provider sends a JSON document, this will contain the
-     * JSON as a string that must be decoded with something like `JSON.parse()`
-     */
-    payload?: any;
-    cause?: Cause;
+  /**
+   * buildID is the unique ID for this build.
+   */
+  buildID: string;
+  /**
+   * workerID is the ID of the worker responsible for handling this event.
+   */
+  workerID: string;
+  /**
+   * type is the event type ("push", "pull_request")
+   */
+  type: string;
+  /**
+   * provider is the thing that triggered the event ("github", "vsts")
+   */
+  provider: string;
+  /**
+   * commit is the upstream VCS commit ID (revision).
+   *
+   * If it is not provided, it may be interpreted as `master`, or the head
+   * of the main branch.
+   *
+   * The default value is not guaranteed to be `master` in future versions.
+   */
+  commit?: string;
+  /**
+   * payload is the event body.
+   * This is the original source from upstream. If upstream returned a string,
+   * it is _not_ parsed. For example,
+   * if the upstream provider sends a JSON document, this will contain the
+   * JSON as a string that must be decoded with something like `JSON.parse()`
+   */
+  payload?: any;
+  cause?: Cause;
 }
 
 /**
@@ -118,53 +118,35 @@ export interface Repository {
 }
 
 /**
- * KubernetesConfig describes Kubernetes configuration for a Project
- */
-export interface KubernetesConfig {
-    /**
-     * namespace is the Kubernetes namespace in which this project should operate.
-     */
-    namespace: string;
-    /**
-     * vcsSidecare is the image name for the sidecar container that resolves VCS operations.
-     */
-    vcsSidecar: string;
-}
-
-/**
  * Project represents a Brigade project.
  */
 export class Project {
-    /**
-     * id is the unique ID of the project
-     */
-    id: string;
-    /**
-     * name is the project name.
-     */
-    name: string;
-    /**
-     * repo describes the VCS where source for this project can be obtained.
-     */
-    repo: Repository;
-    /**
-     * kubernetes contains the kubernetes configuration for this project.
-     */
-    kubernetes: KubernetesConfig;
-    /*
-     * secrets is a map of secret names to secret values.
-     */
-    secrets: {[key:string]: string};
+  /**
+   * id is the unique ID of the project
+   */
+  id: string;
+  /**
+   * name is the project name.
+   */
+  name: string;
+  /**
+   * repo describes the VCS where source for this project can be obtained.
+   */
+  repo: Repository;
+  /*
+   * secrets is a map of secret names to secret values.
+   */
+  secrets: { [key: string]: string };
 
-    /**
-     * allowPrivilegedJobs enables privileged mode.
-     */
-    allowPrivilegedJobs: boolean;
+  /**
+   * allowPrivilegedJobs enables privileged mode.
+   */
+  allowPrivilegedJobs: boolean;
 
-    /*
-     * allowHostMounts enables whether or not builds can mount in host volumes.
-     */
-    allowHostMounts: boolean;
+  /*
+   * allowHostMounts enables whether or not builds can mount in host volumes.
+   */
+  allowHostMounts: boolean;
 }
 
 /**
@@ -172,7 +154,7 @@ export class Project {
  *
  * An event handler will always receive an event and a project.
  */
-type EventHandler =  (e: BrigadeEvent, proj?: Project) => void
+type EventHandler = (e: BrigadeEvent, proj?: Project) => void
 
 /**
  * EventRegistry manages the registration and execution of events.
@@ -188,7 +170,7 @@ export class EventRegistry extends EventEmitter {
   }
 
   public has(name: string) {
-    return this.listenerCount(name) > 0 
+    return this.listenerCount(name) > 0
   }
 
   /**

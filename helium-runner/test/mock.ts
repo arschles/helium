@@ -1,5 +1,5 @@
-import {Project, BrigadeEvent} from "../src/events"
-import {Result, Job} from "../src/job"
+import { Project, BrigadeEvent } from "../src/events"
+import { Result, Job } from "../src/job"
 
 
 // This package contains mocks of objects found elsewhere in Brigade.
@@ -13,10 +13,6 @@ export function mockProject(): Project {
       name: "deis/empty-testbed",
       cloneURL: "https://github.com/deis/empty-testbed.git",
       token: "supersecret"
-    },
-    kubernetes: {
-      namespace: "default",
-      vcsSidecar: "deis/git-sidecar:latest"
     },
     allowPrivilegedJobs: true,
     allowHostMounts: false,
@@ -59,7 +55,7 @@ export class MockJob extends Job {
     this._podName = "generated-fake-job-name"
     return new Promise((resolve, reject) => {
       if (fail) {
-        setTimeout(() => {reject("Failed")}, delay)
+        setTimeout(() => { reject("Failed") }, delay)
         return
       }
       setTimeout(resolve(new MockResult(this.name)), delay)

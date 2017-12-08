@@ -1,3 +1,4 @@
+"use strict";
 /**
  * The Brigade Worker is responsible for executing `brigade.js` files.
  *
@@ -18,42 +19,33 @@
  *
  * Also, the Brigade script must be written to `brigade.js`.
  */
-
+Object.defineProperty(exports, "__esModule", { value: true });
 // Seems to be a bug in typedocs that requires this empty comment.
 /** */
-
-import * as fs from "fs"
-import * as process from "process"
-
-import * as ulid from "ulid"
-
-import * as events from "./events"
-import * as brigadier from './brigadier'
-import { App } from "./app"
-
-// helium is the result of compiling all of the helium scripts together
-import "./helium"
-
-const pkg = require('../../package.json')
-console.log(`helium - runner version: ${pkg.version} `)
-
-let projectID: string = process.env.BRIGADE_PROJECT_ID
-let projectNamespace: string = process.env.BRIGADE_PROJECT_NAMESPACE
-let commit = process.env.BRIGADE_COMMIT || "master"
-let defaultULID = ulid()
-let e: events.BrigadeEvent = {
-  buildID: process.env.BRIGADE_BUILD || defaultULID,
-  workerID: process.env.BRIGADE_BUILD_NAME || `unknown - ${defaultULID} `,
-  type: process.env.BRIGADE_EVENT_TYPE || "ping",
-  provider: process.env.BRIGADE_EVENT_PROVIDER || "unknown",
-  commit: commit
-}
-
+const fs = require("fs");
+const process = require("process");
+const ulid = require("ulid");
+const app_1 = require("./app");
+// This is a side-effect import.
+require("./brigade");
+const pkg = require('../../package.json');
+console.log(`helium-runner version: ${pkg.version}`);
+let projectID = process.env.BRIGADE_PROJECT_ID;
+let projectNamespace = process.env.BRIGADE_PROJECT_NAMESPACE;
+let commit = process.env.BRIGADE_COMMIT || "master";
+let defaultULID = ulid();
+let e = {
+    buildID: process.env.BRIGADE_BUILD || defaultULID,
+    workerID: process.env.BRIGADE_BUILD_NAME || `unknown-${defaultULID}`,
+    type: process.env.BRIGADE_EVENT_TYPE || "ping",
+    provider: process.env.BRIGADE_EVENT_PROVIDER || "unknown",
+    commit: commit
+};
 try {
-  e.payload = fs.readFileSync("/etc/brigade/payload", "utf8")
-} catch (e) {
-  console.log("no payload loaded")
+    e.payload = fs.readFileSync("/etc/brigade/payload", "utf8");
 }
-
+catch (e) {
+    console.log("no payload loaded");
+}
 // Run the app.
-(new App(projectID, projectNamespace)).run(e)
+(new app_1.App(projectID, projectNamespace)).run(e);
