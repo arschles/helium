@@ -3,4 +3,4 @@
 
 # TODO: handle multiple scripts
 
-cp ${HELIUM_SCRIPTS_DIR}/main.js ${HELIUM_TARGET_DIR}/helium.js
+cp ${HELIUM_SCRIPTS_DIR}/main.js ${HELIUM_TARGET_DIR}/main.js

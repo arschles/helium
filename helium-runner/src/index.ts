@@ -31,8 +31,11 @@ import * as events from "./events"
 import * as brigadier from './brigadier'
 import { App } from "./app"
 
-// helium is the result of compiling all of the helium scripts together
-import "./helium"
+// helium is the result of compiling all of the helium scripts together. it only 
+// registers events
+//
+// this module should match the "main.js" in the /helium-runner/prepare.sh file
+import "./main"
 
 const pkg = require('../../package.json')
 console.log(`helium - runner version: ${pkg.version} `)
