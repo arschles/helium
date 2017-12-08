@@ -10,16 +10,16 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "godo"
-	app.Usage = "godo is a build and CI tool for Go projects"
+	app.Name = "helium"
+	app.Usage = "helium is your one-stop shop for building and deploying Kubernetes apps"
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  actions.FlagDebug,
 			Usage: "Enable verbose debugging output",
 		},
 		cli.StringFlag{
-			Name:  actions.FlagConfigFile,
-			Usage: "Specify the name and location of the config file",
+			Name:  actions.FlagConfigDir,
+			Usage: "The location of the config directory",
 		},
 	}
 

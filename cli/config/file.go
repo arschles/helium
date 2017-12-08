@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	DefaultFileNameYaml = "godo.yaml"
-	DefaultFileNameYml  = "godo.yml"
+	DefaultFileNameYaml = "main.yaml"
+	DefaultDirectory    = "./.helium"
 )
 
 func ReadBytes(b []byte) (*File, error) {
@@ -27,7 +27,7 @@ func ReadBytes(b []byte) (*File, error) {
 func Read(name string) (*File, error) {
 	var fileBytes []byte
 	var err error
-	fileNames := []string{name, DefaultFileNameYaml, DefaultFileNameYml}
+	fileNames := []string{name, DefaultFileNameYaml}
 	for _, fileName := range fileNames {
 		b, readFileErr := ioutil.ReadFile(fileName)
 		if readFileErr == nil {
@@ -58,28 +58,11 @@ func Empty() *File {
 
 // File is the complete in-memory representation of a config file
 type File struct {
-	Version string         `yaml:"version"`
-	Build   Build          `yaml:"build"`
-	Docker  Docker         `yaml:"docker"`
-	Custom  []CustomTarget `yaml:"custom"`
+	Version string            `yaml:version`
+	Jobs    map[string]*Job   `yaml:"jobs"`
+	Groups  map[string]*Group `yaml:"groups"`
 }
 
 func (f File) String() string {
 	return "Godo Config file version " + f.Version
-}
-
-// Build is the configuration for a build
-type Build struct {
-	ImageName    string   `yaml:"image-name"`
-	ImageTag     string   `yaml:"image-tag"`
-	Gopath       string   `json:"gopath"`
-	OutputBinary string   `yaml:"output-binary"`
-	Env          []string `yaml:"env"`
-}
-
-func (b Build) GetOutputBinary(pathBase string) string {
-	if b.OutputBinary == "" {
-		return pathBase
-	}
-	return b.OutputBinary
 }
