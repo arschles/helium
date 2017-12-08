@@ -62,6 +62,8 @@ func Run() *cobra.Command {
 				"--rm",
 				"-v",
 				fmt.Sprintf("%s:/helium", heliumDir),
+				"--net",
+				"host",
 				"-e",
 				"HELIUM_SCRIPTS_DIR=/helium",
 				"-e",
