@@ -9,7 +9,9 @@ import (
 	log "github.com/kubehelium/helium/pkg/log/human"
 )
 
-// Run runs cmd in the given image using the docker client cl. It mounts cwd into containerMount in the running container and sends on the following channels:
+// Run runs cmd in the given image using the docker client cl.
+// It mounts cwd into containerMount in the running container and sends on the following
+// channels:
 //
 // - rmContainerCh: a function closure that the receiver should call, after they receive on errCh or exitCodeCh, to remove the container. this is commonly done with a 'defer'
 // - stdOut: all logs from STDOUT in the container. this may never receive

@@ -67,22 +67,10 @@
   version = "1.1"
 
 [[projects]]
-  name = "github.com/gobuffalo/envy"
-  packages = ["."]
-  revision = "e613c80275b86293880eddeb27417c9a7c670ff3"
-  version = "v1.3.0"
-
-[[projects]]
   name = "github.com/gogo/protobuf"
   packages = ["proto"]
   revision = "342cbe0a04158f6dcb03ca0079991a51a4248c02"
   version = "v0.5"
-
-[[projects]]
-  name = "github.com/joho/godotenv"
-  packages = ["."]
-  revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
-  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/labstack/gommon"
@@ -101,12 +89,6 @@
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
   version = "v0.0.3"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/mitchellh/go-homedir"
-  packages = ["."]
-  revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
 
 [[projects]]
   name = "github.com/opencontainers/go-digest"
@@ -139,10 +121,22 @@
   version = "v0.8.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/robertkrimen/otto"
+  packages = [".","ast","dbg","file","parser","registry","token"]
+  revision = "3b44b4dcb6c00477273595c312908e2412d07da6"
+
+[[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
   version = "v1.0.4"
+
+[[projects]]
+  name = "github.com/technosophos/ottomatic"
+  packages = ["."]
+  revision = "cfd3b140e4eaa948f4a3d53b4bfd43158fabe3a9"
+  version = "0.1.0"
 
 [[projects]]
   branch = "master"
@@ -163,6 +157,12 @@
   revision = "a0f4589a76f1f83070cb9e5613809e1d07b97c13"
 
 [[projects]]
+  name = "gopkg.in/sourcemap.v1"
+  packages = [".","base64vlq"]
+  revision = "6e83acea0053641eff084973fee085f0c193c61a"
+  version = "v1.0.5"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -171,6 +171,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a50382918762114efc57af0ee4457e7ee54b8eacdfd8a5f6ae9af0f165879dc7"
+  inputs-digest = "3fa74f17dedb47fe18398d0fb2fc0cc1edba29b661538275404e77d379aa56ca"
   solver-name = "gps-cdcl"
   solver-version = 1
