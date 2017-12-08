@@ -1,7 +1,7 @@
 {
     "name": "helium-runner",
     "version": "0.1.0",
-    "description": "The runner for Helium build scripts",
+    "description": "The runner for Helium builds",
     "main": "dist/index",
     "types": "dist/index",
     "scripts": {
@@ -9,11 +9,11 @@
         "start": "node --no-deprecation ./dist/src/index.js",
         "test": "tsc && mocha ./dist/test",
         "build": "tsc",
-        "brigade": "tsc && yarn start",
+        "helium": "tsc && yarn start",
         "docs": "typedoc --out ./doc --excludePrivate --excludeExternals --exclude test/*.ts --exclude doc/** ./src"
     },
     "author": "Aaron Schlesinger",
-    "license": "Apache 2.0",
+    "license": "Apache-2.0",
     "repository": "https://github.com/kubehelium/helium",
     "devDependencies": {
         "@kubernetes/typescript-node": "^0.1.1",
