@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/kubehelium/helium/cli/actions"
-	// log "github.com/kubehelium/helium/pkg/log/human"
+	log "github.com/kubehelium/helium/pkg/log/human"
 	"github.com/spf13/cobra"
 )
 
@@ -22,18 +22,17 @@ func main() {
 		},
 	}
 	cmd.AddCommand(actions.Run())
+	cmd.AddCommand(actions.RunServer())
+	flags := cmd.PersistentFlags()
+	var debug bool
+	flags.BoolVarP(&debug, "debug", "d", false, "Turn on debug logging")
+	flags.Parse(os.Args)
+	log.IsDebugging = debug
 	// TODO:
-	//
-	// app.Flags = []cli.Flag{
-	// 	cli.BoolFlag{
-	// 		Name:  actions.FlagDebug,
-	// 		Usage: "Enable verbose debugging output",
-	// 	},
 	// 	cli.StringFlag{
 	// 		Name:  actions.FlagConfigDir,
 	// 		Usage: "The location of the config directory",
 	// 	},
-	// }
 
 	// app.Before = func(c *cli.Context) error {
 	// 	log.IsDebugging = c.Bool(actions.FlagDebug)
