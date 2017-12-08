@@ -56,6 +56,7 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	}
 	absHeDir := filepath.Join(wd, r.heDir)
 	log.Debug("Using He build directory %s", r.heDir)
+	// TODO: also start up the helium runtime server, and link them together
 	cmd := exec.Command(
 		"docker",
 		"run",
