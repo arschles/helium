@@ -6,18 +6,8 @@ import * as ulid from "ulid"
 import * as events from "./events"
 import * as process from "process"
 import * as brigadier from './balloon'
+import { loadEmptyProject } from './project';
 
-interface BuildStorage {
-  create(e: events.BrigadeEvent, project: events.Project, size?: string): Promise<string>
-  destroy(): Promise<boolean>
-}
-
-/**
- * ProjectLoader describes a function able to load a Project.
- */
-interface ProjectLoader {
-  (projectID: string, projectNS: string): Promise<events.Project>
-}
 
 /**
  * App is the main application.
@@ -51,7 +41,7 @@ export class App {
    * 
    * TODO
    */
-  public loadProject: ProjectLoader = null;
+  public loadProject = project.loadEmpty;
   /**
    * buildStorage controls the per-build storage layer.
    * 
