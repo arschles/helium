@@ -34,6 +34,7 @@ func Run() *cobra.Command {
 				log.Debug("Running the event handler server")
 				srvErrCh <- srv.Run()
 			}()
+			// TODO: ping the server until it's up
 
 			imgStr := "helium-runner:v0.0.1"
 			// img, err := docker.ParseImageFromName(imgStr)
