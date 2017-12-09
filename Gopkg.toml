@@ -26,16 +26,8 @@
   name = "github.com/arschles/assert"
 
 [[constraint]]
-  name = "github.com/arschles/godo"
-  version = "0.3.0"
-
-[[constraint]]
   name = "github.com/codegangsta/cli"
   version = "1.20.0"
-
-[[constraint]]
-  name = "github.com/fsouza/go-dockerclient"
-  version = "1.1.0"
 
 [[constraint]]
   name = "github.com/labstack/gommon"
@@ -59,3 +51,4 @@
 
 [[constraint]]
   name = "github.com/docker/docker"
+  version = "v17.03.2-ce"
