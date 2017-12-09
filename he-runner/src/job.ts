@@ -48,6 +48,12 @@ export interface Result {
   toString(): string
 }
 
+export const newResult = (output: string) => {
+  return {
+    toString: () => { return output }
+  }
+}
+
 /**
  * Cache controls the job's cache.
  *

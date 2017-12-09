@@ -9,8 +9,9 @@
 import * as jobImpl from "./job"
 import * as groupImpl from "./group"
 import * as eventsImpl from "./events"
-import axios from 'axios'
 import { getURL } from './url'
+import { List } from 'immutable'
+import { execSync } from 'child_process'
 
 // These are filled by the 'fire' event handler.
 let currentEvent = null
@@ -51,11 +52,16 @@ export function fire(e: eventsImpl.Event, p: eventsImpl.Project) {
  */
 export class Job extends jobImpl.Job {
   run(): Promise<jobImpl.Result> {
-    return axios.post(getURL(), {
-      name: this.name,
-      image: this.image,
-      tasks: this.tasks
-    });
+    let prom = new Promise<jobImpl.Result>((resolve, reject) => {
+      resolve(jobImpl.newResult(""))
+    })
+    for (let task of this.tasks) {
+      prom = prom.then((res: jobImpl.Result) => {
+        const buf = execSync(task, { env: this.env })
+        return jobImpl.newResult(buf.toString('utf8'))
+      })
+    }
+    return prom
   }
 }
 
