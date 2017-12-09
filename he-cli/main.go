@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/arschles/helium/helium-cli/actions"
+	"github.com/arschles/helium/he-cli/actions"
 	log "github.com/arschles/helium/pkg/log/human"
 	"github.com/spf13/cobra"
 )
@@ -23,10 +23,10 @@ func main() {
 	}
 	cmd.AddCommand(actions.Run())
 	flags := cmd.PersistentFlags()
-	var debug bool
-	flags.BoolVarP(&debug, "debug", "d", false, "Turn on debug logging")
+	var verbose bool
+	flags.BoolVarP(&verbose, "verbose", "v", false, "Turn on debug logging")
 	flags.Parse(os.Args)
-	log.IsDebugging = debug
+	log.IsDebugging = verbose
 	// TODO:
 	// 	cli.StringFlag{
 	// 		Name:  actions.FlagConfigDir,

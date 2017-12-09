@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/cobra"
 	// "github.com/arschles/helium/cli/util/docker"
+	"github.com/arschles/helium/pkg/config"
 	log "github.com/arschles/helium/pkg/log/human"
-	"github.com/arschles/helium/pkg/runtime"
 )
 
 type runner struct {
@@ -20,23 +20,28 @@ type runner struct {
 
 func (r *runner) run(c *cobra.Command, args []string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("Usage: he run <event>")
+		return fmt.Errorf("Usage: he run <job>")
 	}
-	event := args[0]
+	jobName := args[0]
+
+	fileName := filepath.Join(r.heDir, "config.toml")
+	_, dirErr := os.Stat(fileName)
+	if os.IsNotExist(dirErr) {
+		return fmt.Errorf("%s does not exist", fileName)
+	}
+	_, cfg, err := config.Parse(fileName)
+	if err != nil {
+		return fmt.Errorf("couldn't parse config file (%s)", err)
+	}
+	job, ok := cfg.Jobs[jobName]
+	if !ok {
+		return fmt.Errorf("Job %s doesn't exist in the config file")
+	}
 	// event := c.String("target")
 	// dockerClient := docker.ClientOrDie()
 	// TODO: make configurable
-	const port = 8080
-	log.Info("build")
-	srv := runtime.NewServer(port)
-	srvErrCh := make(chan error)
-	go func() {
-		log.Debug("Starting the runtime server")
-		srvErrCh <- srv.Run()
-	}()
-	// TODO: ping the server until it's up
+	log.Info("running job %s from %s", jobName, fileName)
 
-	imgStr := "helium-runner:v0.0.1"
 	// img, err := docker.ParseImageFromName(imgStr)
 	// if err != nil {
 	// log.Err("error parsing docker image %s (%s)", imgStr, err)
@@ -54,38 +59,26 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("error getting current working dir")
 	}
-	absHeDir := filepath.Join(wd, r.heDir)
-	log.Debug("Using He build directory %s", r.heDir)
-	// TODO: also start up the helium runtime server, and link them together
+	log.Debug("working directory %s", wd)
+
+	// TODO: use the docker API directly
 	cmd := exec.Command(
 		"docker",
 		"run",
 		"--rm",
 		"-v",
-		fmt.Sprintf("%s:/helium", absHeDir),
-		"--net",
-		"host",
-		"-e",
-		"HELIUM_SCRIPTS_DIR=/helium",
-		"-e",
-		"HELIUM_TARGET_DIR=/home/src/dist/src",
-		"-e",
-		fmt.Sprintf("HELIUM_EVENT_TYPE=%s", event),
-		"-e",
-		"HELIUM_EVENT_PROVIDER=cli",
-		"-e",
-		fmt.Sprintf("HELIUM_URL=%d", port),
-		"-p",
-		fmt.Sprintf("127.0.0.1:%d:%d", port, port),
-		// TODO: HELIUM_EVENT_METADATA?
-		imgStr,
+		fmt.Sprintf("%s:/wd", wd),
+		job.Image,
+		fmt.Sprintf(`sh -c '%s'`, strings.Join(job.Tasks, " && ")),
 	)
+	log.Debug(strings.Join(cmd.Args, " "))
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	log.Debug(strings.Join(cmd.Args, " "))
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("error running command (%s)", err)
+		return fmt.Errorf("%s", err)
+
 	}
+
 	// go docker.Run(
 	// 	dockerClient,
 	// 	img,
@@ -125,23 +118,16 @@ func Run() *cobra.Command {
 	runner := &runner{}
 	cmd := &cobra.Command{
 		Use:   "run",
-		Short: "Execute an individual event on the helium build script",
+		Short: "Execute an individual job",
 		RunE:  runner.run,
 	}
 	flags := cmd.Flags()
-	flags.IntVarP(
-		&runner.port,
-		"runtime-port",
-		"p",
-		8080,
-		"The port on which to start the Helium runtime server",
-	)
 	flags.StringVarP(
 		&runner.heDir,
-		"build-dir",
-		"b",
+		"helium-dir",
+		"d",
 		".helium",
-		"The directory that contains the Helium build script",
+		"The directory that contains the Helium config.toml",
 	)
 	return cmd
 
