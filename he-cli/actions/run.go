@@ -1,16 +1,20 @@
 package actions
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
-	"github.com/spf13/cobra"
-	// "github.com/arschles/helium/cli/util/docker"
 	"github.com/arschles/helium/pkg/config"
 	log "github.com/arschles/helium/pkg/log/human"
+	"github.com/docker/engine-api/client"
+	"github.com/docker/engine-api/types"
+	"github.com/docker/engine-api/types/container"
+	"github.com/spf13/cobra"
+	"golang.org/x/net/context"
 )
 
 type runner struct {
@@ -37,24 +41,8 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	if !ok {
 		return fmt.Errorf("Job %s doesn't exist in the config file")
 	}
-	// event := c.String("target")
-	// dockerClient := docker.ClientOrDie()
-	// TODO: make configurable
 	log.Info("running job %s from %s", jobName, fileName)
 
-	// img, err := docker.ParseImageFromName(imgStr)
-	// if err != nil {
-	// log.Err("error parsing docker image %s (%s)", imgStr, err)
-	// os.Exit(1)
-	// }
-
-	// rmContainerCh := make(chan func())
-	// stdOutCh := make(chan docker.Log)
-	// stdErrCh := make(chan docker.Log)
-	// exitCodeCh := make(chan int)
-	// errCh := make(chan error)
-
-	// TODO: make configurable
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("error getting current working dir")
