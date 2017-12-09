@@ -22,7 +22,6 @@ func main() {
 		},
 	}
 	cmd.AddCommand(actions.Run())
-	cmd.AddCommand(actions.RunServer())
 	flags := cmd.PersistentFlags()
 	var debug bool
 	flags.BoolVarP(&debug, "debug", "d", false, "Turn on debug logging")
