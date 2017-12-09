@@ -1,18 +1,14 @@
 package actions
 
 import (
-	"context"
 	"fmt"
-	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/arschles/helium/pkg/config"
 	log "github.com/arschles/helium/pkg/log/human"
-	"github.com/docker/engine-api/client"
-	"github.com/docker/engine-api/types"
-	"github.com/docker/engine-api/types/container"
 	"github.com/spf13/cobra"
 )
 
@@ -38,12 +34,9 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	}
 	job, ok := cfg.Jobs[jobName]
 	if !ok {
-		return fmt.Errorf("Job %s doesn't exist in the config file")
+		return fmt.Errorf("Job %s doesn't exist in the config file", jobName)
 	}
-	cl, err := client.NewEnvClient()
-	if err != nil {
-		return fmt.Errorf("couldn't connect to the Docker daemon (%s)", err)
-	}
+
 	log.Info("running job %s from %s", jobName, fileName)
 
 	wd, err := os.Getwd()
@@ -52,34 +45,20 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	}
 	log.Debug("working directory %s", wd)
 
-	// TODO: check for image
-	// if _, err = cli.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{}); err != nil {
-	// 	panic(err)
-	// }
-	ctx := context.Background()
-	resp, err := cl.ContainerCreate(ctx, &container.Config{
-		Image: job.Image,
-		Cmd:   []string{"sh", "-c", strings.Join(job.Tasks, " && ")},
-	}, nil, nil, "") // TODO: mounts
-	if err != nil {
-		return fmt.Errorf("creating container (%s)", err)
+	for i, task := range job.Tasks {
+		log.Debug(task)
+		spl := strings.Split(task, " ")
+		if len(spl) < 1 {
+			continue
+		}
+		first := spl[0]
+		cmd := exec.Command(first, spl[1:]...)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			log.Err("task %d failed (%s)", i, err)
+		}
 	}
-
-	if err := cl.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-		return fmt.Errorf("starting container (%s)", err)
-	}
-
-	out, err := cl.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
-	if err != nil {
-		panic(err)
-	}
-
-	io.Copy(os.Stdout, out)
-
-	if _, err := cl.ContainerWait(ctx, resp.ID); err != nil {
-		return fmt.Errorf("failed execution (%s)", err)
-	}
-
 	return nil
 }
 
