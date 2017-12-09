@@ -62,6 +62,7 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	log.Debug("working directory %s", wd)
 
 	// TODO: use the docker API directly
+	// https://docs.docker.com/develop/sdk/#api-version-matrix
 	cmd := exec.Command(
 		"docker",
 		"run",
