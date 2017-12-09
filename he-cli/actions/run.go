@@ -3,8 +3,8 @@ package actions
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -14,7 +14,6 @@ import (
 	"github.com/docker/engine-api/types"
 	"github.com/docker/engine-api/types/container"
 	"github.com/spf13/cobra"
-	"golang.org/x/net/context"
 )
 
 type runner struct {
@@ -41,6 +40,10 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	if !ok {
 		return fmt.Errorf("Job %s doesn't exist in the config file")
 	}
+	cl, err := client.NewEnvClient()
+	if err != nil {
+		return fmt.Errorf("couldn't connect to the Docker daemon (%s)", err)
+	}
 	log.Info("running job %s from %s", jobName, fileName)
 
 	wd, err := os.Getwd()
@@ -49,56 +52,34 @@ func (r *runner) run(c *cobra.Command, args []string) error {
 	}
 	log.Debug("working directory %s", wd)
 
-	// TODO: use the docker API directly
-	// https://docs.docker.com/develop/sdk/#api-version-matrix
-	cmd := exec.Command(
-		"docker",
-		"run",
-		"--rm",
-		"-v",
-		fmt.Sprintf("%s:/wd", wd),
-		job.Image,
-		fmt.Sprintf(`sh -c '%s'`, strings.Join(job.Tasks, " && ")),
-	)
-	log.Debug(strings.Join(cmd.Args, " "))
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("%s", err)
-
+	// TODO: check for image
+	// if _, err = cli.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{}); err != nil {
+	// 	panic(err)
+	// }
+	ctx := context.Background()
+	resp, err := cl.ContainerCreate(ctx, &container.Config{
+		Image: job.Image,
+		Cmd:   []string{"sh", "-c", strings.Join(job.Tasks, " && ")},
+	}, nil, nil, "") // TODO: mounts
+	if err != nil {
+		return fmt.Errorf("creating container (%s)", err)
 	}
 
-	// go docker.Run(
-	// 	dockerClient,
-	// 	img,
-	// 	"helium-runner",
+	if err := cl.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		return fmt.Errorf("starting container (%s)", err)
+	}
 
-	// 	docker.ContainerGopath(cfg.Build.Gopath, paths.PackageName),
-	// 	fmt.Sprintf("go build -o %s .", binaryName),
-	// 	cfg.Build.Env,
-	// 	rmContainerCh,
-	// 	stdOutCh,
-	// 	stdErrCh,
-	// 	exitCodeCh,
-	// 	errCh,
-	// )
+	out, err := cl.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
+	if err != nil {
+		panic(err)
+	}
 
-	// for {
-	// 	select {
-	// 	case rmContainerFn := <-rmContainerCh:
-	// 		defer rmContainerFn()
-	// 	case l := <-stdOutCh:
-	// 		log.Info("%s", l)
-	// 	case l := <-stdErrCh:
-	// 		log.Warn("%s", l)
-	// 	case err := <-errCh:
-	// 		log.Err("%s", err)
-	// 		return
-	// 	case i := <-exitCodeCh:
-	// 		log.Info("exited with code %d", i)
-	// 		return
-	// 	}
-	// }
+	io.Copy(os.Stdout, out)
+
+	if _, err := cl.ContainerWait(ctx, resp.ID); err != nil {
+		return fmt.Errorf("failed execution (%s)", err)
+	}
+
 	return nil
 }
 
