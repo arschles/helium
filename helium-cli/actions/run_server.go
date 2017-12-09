@@ -3,8 +3,8 @@ package actions
 import (
 	"os"
 
-	log "github.com/kubehelium/helium/pkg/log/human"
-	"github.com/kubehelium/helium/pkg/runtime"
+	log "github.com/arschles/helium/pkg/log/human"
+	"github.com/arschles/helium/pkg/runtime"
 	"github.com/spf13/cobra"
 )
 

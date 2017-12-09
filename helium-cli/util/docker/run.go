@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	docker "github.com/fsouza/go-dockerclient"
-	log "github.com/kubehelium/helium/pkg/log/human"
+	log "github.com/arschles/helium/pkg/log/human"
 )
 
 // Run runs cmd in the given image using the docker client cl.

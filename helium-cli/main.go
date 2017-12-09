@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kubehelium/helium/helium-cli/actions"
-	log "github.com/kubehelium/helium/pkg/log/human"
+	"github.com/arschles/helium/helium-cli/actions"
+	log "github.com/arschles/helium/pkg/log/human"
 	"github.com/spf13/cobra"
 )
 
